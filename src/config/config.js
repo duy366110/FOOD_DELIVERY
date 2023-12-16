@@ -5,10 +5,10 @@ config();
 
 const configuration = {
     dev: {
-        db: "dev"
+        db: process.env.db_dev
     },
     pro: {
-        db: "pro"
+        db: process.env.db_pro
     }
 }
 
