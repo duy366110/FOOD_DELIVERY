@@ -1,4 +1,5 @@
 "use strict"
+import Instance from "./src/utils/util-db.js";
 import app from "./src/server.js";
 import environment from "./environment.js";
 
