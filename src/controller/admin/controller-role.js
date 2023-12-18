@@ -39,6 +39,21 @@ class ControllerRole {
         }
     }
 
+    
+    /**
+     * Admin thực hiện xoá role - không rollback
+     */
+    async destroyRole(req, res, next) {
+        let { role } = req.body;
+        let roleInfor = await serviceRole.deleteRole({id: role});
+        
+        if(roleInfor._id.toString() === role) {
+            return res.status(200).json({status: true, message: "Admin detroy role success"});
+        } else {
+            return res.status(200).json({status: false, message: "Admin detroy role unsuccess"});
+        }
+    }
+
 }
 
 export default new ControllerRole();

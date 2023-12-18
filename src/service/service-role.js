@@ -27,6 +27,30 @@ class serviceRole {
         }
     }
 
+    // LẤY DANH SÁCH ROLE
+    async getAll(cb) {
+        try {
+            let roles = await ModelRole.find({}).lean();
+            cb({status: true, message: 'Get roles successfully', roles});
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            cb({status: false, message: 'Method failed', error});
+        }
+    }
+
+    // TRUY XUẤT ROLE TỬ THEO ID
+    async getById(id, cb) {
+        try {
+            let role = await ModelRole.findById(id).lean();
+            cb({status: true, message: 'Get role successfully', role});
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            cb({status: false, message: 'Method failed', error});
+        }
+    }
+
     /**
      * Kiểm tra role đã tồn tại hay chưa
      * @param {*} nameRole 
@@ -53,6 +77,35 @@ class serviceRole {
 
         } catch (error) {
             throw error;
+        }
+    }
+
+    // CẬP NHẬT ROLE
+    async update(role = {}, cb) {
+        try {
+            role.model.name = role.name;
+
+            await role.model.save();
+            cb({status: true, message: 'Update role successfully'});
+
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            cb({status: false, message: 'Method failed', error});
+        }
+    }
+
+    /**
+     * Admin thực hiện xoá role - không rollback
+     * @param {*} role 
+     * @param {*} cb 
+     */
+    async deleteRole(role = {id: ""}) {
+        try {
+            return await modelRole.findOneAndDelete({_id: {$eq: role.id}});
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            cb({status: false, message: 'Method failed', error});
         }
     }
 }
