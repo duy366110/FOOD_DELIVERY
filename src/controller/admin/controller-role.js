@@ -25,6 +25,15 @@ class ControllerRole {
     }
 
     /**
+     * Admin truy cập role thông qua id
+    */
+   async getRoleById(req, res, next) {
+    let { id } = req.params;
+    let roleInfor = await serviceRole.getRoleById(id);
+    return res.status(200).json({status: true, message: "Get role success", role: roleInfor});
+   }
+
+    /**
      * Admin tạo mới role
      */
     async createRole(req, res, next) {
@@ -39,6 +48,20 @@ class ControllerRole {
         }
     }
 
+    /**
+     * Admin thực hiên cập nhật role - không rollback
+     */
+    async updateRole(req, res, next) {
+        let { id, name } = req.body;
+        let roleInfor = await serviceRole.updateRole({id, name});
+
+        if(roleInfor._id.toString() === id) {
+            return res.status(200).json({status: true, message: "Admin update role success"});
+        } else {
+            return res.status(400).json({status: false, message: "Admin update role unsuccess"});
+        }
+    }
+
     
     /**
      * Admin thực hiện xoá role - không rollback
@@ -50,7 +73,7 @@ class ControllerRole {
         if(roleInfor._id.toString() === role) {
             return res.status(200).json({status: true, message: "Admin detroy role success"});
         } else {
-            return res.status(200).json({status: false, message: "Admin detroy role unsuccess"});
+            return res.status(400).json({status: false, message: "Admin detroy role unsuccess"});
         }
     }
 

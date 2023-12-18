@@ -5,7 +5,16 @@ const router = Router();
 
 router.get("/amount", controllerRole.getRoleAmount);
 router.get("/:start/:limit", controllerRole.getRoles);
-router.post("/new", controllerRole.createRole);
+router.get("/:id", controllerRole.getRoleById);
+router.post("/new",
+[
+    body('name').custom((value, {req}) => {
+        if(!value) throw Error('Name role not empty');
+        return true;
+    }),
+],
+controllerRole.createRole);
+router.post("/update", controllerRole.updateRole);
 router.post("/delete", controllerRole.destroyRole);
 
 export default router;
