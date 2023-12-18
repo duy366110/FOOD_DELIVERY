@@ -39,15 +39,14 @@ class serviceRole {
         }
     }
 
-    // TRUY XUẤT ROLE TỬ THEO ID
-    async getById(id, cb) {
+    /**
+     * Admin truy cập role thông qua id
+    */
+    async getRoleById(id = "") {
         try {
-            let role = await ModelRole.findById(id).lean();
-            cb({status: true, message: 'Get role successfully', role});
-
+            return await modelRole.findById(id).lean();
         } catch (error) {
-            // THỰC HIỆN PHƯƠNG THỨC LỖI
-            cb({status: false, message: 'Method failed', error});
+            throw error;
         }
     }
 
@@ -81,17 +80,17 @@ class serviceRole {
     }
 
     // CẬP NHẬT ROLE
-    async update(role = {}, cb) {
+    async updateRole(role = {}, cb) {
         try {
-            role.model.name = role.name;
-
-            await role.model.save();
-            cb({status: true, message: 'Update role successfully'});
-
+            return await modelRole.findOneAndUpdate(
+                {_id: role.id },
+                {name: role.name},
+                {new: true,}
+            )
 
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI
-            cb({status: false, message: 'Method failed', error});
+            throw error;
         }
     }
 
