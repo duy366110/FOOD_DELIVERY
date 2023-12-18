@@ -6,5 +6,6 @@ const router = Router();
 router.get("/amount", controllerRole.getRoleAmount);
 router.get("/:start/:limit", controllerRole.getRoles);
 router.post("/new", controllerRole.createRole);
+router.post("/delete", controllerRole.destroyRole);
 
 export default router;
