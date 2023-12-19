@@ -45,6 +45,21 @@ class ControllerUser {
             return res.status(400).json({status: false, message: "Create user account unsuccess"});
         }
     }
+
+    /**
+     * Admin thực hiện xoá user account không rollback
+     */
+    async destroyUserAccount(req, res, next) {
+        let { user } = req.body;
+        let status = await serviceUser.destroyUserAccount({id: user});
+        
+        if(status) {
+            return res.status(200).json({status: true, message: "Destroy user account success"});
+            
+        } else {
+            return res.status(400).json({status: false, message: "Destroy user account unsuccess"});
+        }
+    }
 }
 
 export default new ControllerUser();
