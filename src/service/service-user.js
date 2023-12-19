@@ -18,7 +18,7 @@ class ServiceUser {
             .sort({createdAt: -1})
             .skip(start)
             .limit(limit)
-            .populate([configDb.role])
+            .populate(["role"])
             .lean();
 
         } catch (error) {
