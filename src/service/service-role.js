@@ -51,6 +51,18 @@ class serviceRole {
     }
 
     /**
+     * Tìm kiếm role thông qua ID
+     */
+    async findRoleById(id = "") {
+        try {
+            return await modelRole.findById(id).exec();
+            
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
      * Kiểm tra role đã tồn tại hay chưa
      * @param {*} nameRole 
      * @returns 

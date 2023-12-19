@@ -1,7 +1,8 @@
 "use strict"
 
 const configDB = {
-    role: 'roles'
+    role: 'roles',
+    user: "users"
 }
 
 export default configDB;

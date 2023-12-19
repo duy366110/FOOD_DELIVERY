@@ -1,24 +1,23 @@
 "use strict"
-import { hashSync, compare } from "bcryptjs";
+import bcryptjs from 'bcryptjs';
+const { hashSync, compare } = bcryptjs;
 
 class Bcrypt  {
-
     salt = 12;
 
     constructor() {}
-
 
     has(password) {
         return hashSync(password, this.salt);
     }
 
-    compare(password, hash, callback) {
-        bcrypt.compare(password, hash, (error, data) => {
+    compare(password, hash, cb) {
+        compare(password, hash, (error, data) => {
             if(data) {
-                callback({status: true, hash: data});
+                cb({status: true, hash: data});
 
             } else {
-                callback({status: false, hash: null});
+                cb({status: false, hash: null});
                 
             }
         })
