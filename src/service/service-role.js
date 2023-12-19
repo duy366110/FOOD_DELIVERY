@@ -27,15 +27,16 @@ class serviceRole {
         }
     }
 
-    // LẤY DANH SÁCH ROLE
-    async getAll(cb) {
+    /**
+     * Admin truy xuất tất của các roles hiện có
+     * @returns 
+     */
+    async getAllRole() {
         try {
-            let roles = await ModelRole.find({}).lean();
-            cb({status: true, message: 'Get roles successfully', roles});
-
+            return await modelRole.find({}).lean();
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI
-            cb({status: false, message: 'Method failed', error});
+            throw error
         }
     }
 

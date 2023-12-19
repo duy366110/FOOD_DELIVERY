@@ -33,6 +33,13 @@ class ControllerRole {
     return res.status(200).json({status: true, message: "Get role success", role: roleInfor});
    }
 
+   /**
+     * Admin truy xuất tất của các roles hiện có
+     */
+   async getAllRole(req, res, next) {
+    return res.status(200).json({status: true, message: 'get roles success', roles: await serviceRole.getAllRole()});
+   }
+
     /**
      * Admin tạo mới role
      */

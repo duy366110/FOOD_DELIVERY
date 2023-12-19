@@ -77,7 +77,7 @@ class ServiceUser {
         try {
             let roleInfor = await serviceRole.findRoleById(role);
 
-            return await modelUser.create({
+            let userInfor = await modelUser.create({
                 fullname: user.fullname,
                 email: user.email,
                 password: utilBcrypt.has(user.password),
@@ -85,6 +85,13 @@ class ServiceUser {
                 address: user.address,
                 role: roleInfor
             });
+
+            if(userInfor) {
+                roleInfor.users.push(userInfor);
+                await roleInfor.save();
+                return true;
+            }
+            return false;
 
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI

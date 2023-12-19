@@ -4,6 +4,7 @@ import { body } from "express-validator";
 import controllerRole from "../../controller/admin/controller-role.js";
 const router = Router();
 
+router.get("/all", controllerRole.getAllRole);
 router.get("/amount", controllerRole.getRoleAmount);
 router.get("/:start/:limit", controllerRole.getRoles);
 router.get("/:id", controllerRole.getRoleById);
