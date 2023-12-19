@@ -52,6 +52,18 @@ class ServiceUser {
     // }
 
     /**
+     * Admin truy xuất user account thông qua id
+     */
+
+    async findUserById(id = "") {
+        try {
+            return await modelUser.findById(id).populate(['role']).exec();
+        } catch (error) {
+            throw error
+        }
+    }
+
+    /**
      * Admin truy cập số lượng user hiện có
      */
     async getUserAmount() {
@@ -177,21 +189,23 @@ class ServiceUser {
     //     }
     // }
 
-    // XOÁ CATEGORY
-    // async delete(user = {}, cb) {
-    //     try {
+    /**
+     * Admin thực hiện xoá user account không rollback
+     */
+    async destroyUserAccount(user = {}, cb) {
+        try {
+            let userInfor = await modelUser.findById(user.id).populate(['role']).exec();
+            userInfor.role.users =  userInfor.role.users.filter((userRef) => userRef.toString() !== user.id);
+            await userInfor.role.save();
 
-    //         user.model.role.users = user.model.role.users.filter((userElm) => userElm.toString() !== user.model._id.toString());
-    //         await user.model.role.save();
+            let { acknowledged, deletedCount } = await userInfor.deleteOne();
+            return deletedCount? true : false;
 
-    //         await user.model.deleteOne();
-    //         cb({status: true, message: 'Delete user account successfully'});
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 }
 
 export default new ServiceUser();
