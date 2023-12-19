@@ -6,6 +6,31 @@ class ControllerUser {
     constructor() { }
 
     /**
+     * Admin lấy số lượng user hiện có.
+     */
+    async getUserAmount(req, res, next) {
+        return res.status(200).json({
+            status: true,
+            message: "Get amount success",
+            amount: await serviceUser.getUserAmount()
+        });
+    }
+
+    /**
+     * Admin truy cập danh sách user cùng phân trang
+     */
+    async getUsers(req, res, next) {
+        let {start, limit} = req.params;
+        let users = await serviceUser.getUsers(start, limit);
+        
+        return res.status(200).json({
+            status: true,
+            message: "Get user success",
+            users: users
+        })
+    }
+
+    /**
      * Admin tạo mới tài khoản người dùng
      */
     async createUserAccount(req, res, next) {

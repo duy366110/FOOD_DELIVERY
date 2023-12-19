@@ -1,26 +1,31 @@
 "use strict"
-// const ModelUser = require("../model/model.user");
-// const UtilJwt = require("../util/util.jwt");
-// const UtilBcrypt = require("../util/util.bcrypt");
 import modelUser from "../model/model.user.js";
 import serviceRole from "./service-role.js";
 import utilBcrypt from "../utils/util-bcrypt.js";
+import configDb from "../config/config-db.js";
 
 class ServiceUser {
 
     constructor() { }
 
-    // LẤY DANH SÁCH USER
-    // async getLimit(limit, start, cb) {
-    //     try {
-    //         let users = await ModelUser.find({}).sort({createDate: 'desc'}).limit(limit).skip(start).populate(['role']).lean();
-    //         cb({status: true, message: 'Get users successfully', users});
+    /**
+     * Admin truy xuất số lượng usẻ với số lượng chỉ định
+     */
+    async getUsers(start = 0, limit = 10) {
+        try {
+            return await modelUser
+            .find({})
+            .sort({createdAt: -1})
+            .skip(start)
+            .limit(limit)
+            .populate([configDb.role])
+            .lean();
 
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     // LẤY DANH SÁCH USER
     // async getAll(cb) {
@@ -46,17 +51,17 @@ class ServiceUser {
     //     }
     // }
 
-    // LẤY SỐ LƯỢNG USER
-    // async getAmount(cb) {
-    //     try {
-    //         let amount = await ModelUser.find({}).count().lean();
-    //         cb({status: true, message: 'Get amount user successfully', amount});
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+    /**
+     * Admin truy cập số lượng user hiện có
+     */
+    async getUserAmount() {
+        try {
+            return await modelUser.find({}).count();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     // TÌM USER ACCOUNT THEO ID
     // async findByEmail(email, cb) {
@@ -78,7 +83,7 @@ class ServiceUser {
             let roleInfor = await serviceRole.findRoleById(role);
 
             let userInfor = await modelUser.create({
-                fullname: user.fullname,
+                fullName: user.fullName,
                 email: user.email,
                 password: utilBcrypt.has(user.password),
                 phonenumber: user.phonenumber,
