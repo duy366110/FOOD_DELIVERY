@@ -60,17 +60,14 @@ class ControllerUser {
      */
     async updateUserAccount(req, res, next) {
         let { id, fullName, email, phone, address, role } = req.body;
-        console.log(req.body);
-        await serviceUser.updateUserAccount({id, fullName, email, phone, address}, role);
-        return res.status(200).json({status: true, message: "Admin update role success"});
+        let user = await serviceUser.updateUserAccount({id, fullName, email, phone, address}, role);
 
-        // let roleInfor = await serviceRole.updateRole({id, name});
+        if(user) {
+            return res.status(200).json({status: true, message: "Admin update role success"});
 
-        // if(roleInfor._id.toString() === id) {
-        //     return res.status(200).json({status: true, message: "Admin update role success"});
-        // } else {
-        //     return res.status(400).json({status: false, message: "Admin update role unsuccess"});
-        // }
+        } else {
+            return res.status(400).json({status: false, message: "Admin update role unsuccess"});
+        }
     }
 
     /**

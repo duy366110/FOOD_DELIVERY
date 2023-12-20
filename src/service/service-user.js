@@ -116,50 +116,6 @@ class ServiceUser {
         }
     }
 
-    // KHÁCH HÀNG ĐĂNG KÝ TÀI KHOẢN
-    // async register(user={}, role = {}, cb) {
-    //     try {
-    //         let userInfor = await ModelUser.create({
-    //             username: user.username,
-    //             fullname: user.fullname,
-    //             email: user.email,
-    //             password: UtilBcrypt.has(user.password),
-    //             phonenumber: user.phone,
-    //             address: user.address,
-    //             role
-    //         });
-
-    //         if(userInfor) {
-    //             role.users.push(userInfor);
-    //             await role.save();
-    //             cb({status: true, message: 'Register user successfully', user: userInfor});
-
-    //         } else {
-    //             cb({status: false, message: 'Register user unsuccessfully', user: null, error: null});
-    //         }
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
-
-    // VERIFY USER THÔNG QUA TOKEN - AUTHENTIZATION
-    // async verifyAuthorization(token = '', cb) {
-    //     UtilJwt.verify(token.trim(), async (information) => {
-    //         let { status, message, infor } = information;
-            
-    //         if(status && infor) {
-    //             let user = await ModelUser.findOne({email: {$eq: infor.email}}).populate(['bookings']).exec();
-    //             cb({status: true, message, user});
-
-    //         } else {
-    //             // TOKEN KHÔNG HỢP LỆ
-    //             cb({status: false, message});
-    //         }
-    //     })
-    // }
-
     /**
      * Admin thực hiên cập nhật user - không rollback
      */
@@ -184,8 +140,7 @@ class ServiceUser {
             userInfor.email = user.email;
             userInfor.phone = user.phone;
             userInfor.address = user.address;
-            let result = await userInfor.updateOne();
-            console.log(result);
+            return await userInfor.save();
 
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI
