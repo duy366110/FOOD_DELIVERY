@@ -5,12 +5,23 @@ class ControllerAccess {
     constructor() { }
 
     /**
-     * Admin đăng nhập console
+     * Admin đăng nhập vào console
      */
     async adminSignin(req, res, next) {
         let { email, password } = req.body;
-        await serviceAccess.verifyUserAccount({email, password}, "Admin", (information) => {
+        await serviceAccess.verifySigninUserAccount({email, password}, (information) => {
             return res.status(200).json(information);
+        });
+    }
+
+    /**
+     * Admin đăng xuất khỏi console
+     */
+    async adminSignout(req, res, next) {
+        let {id, accessToken, refreshToken} = req.body;
+
+        await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
+            return res.status(200).json({status: true, message: "User signout success"});
         });
     }
 }

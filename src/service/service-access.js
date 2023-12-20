@@ -14,6 +14,10 @@ class ServiceAccess {
         return await modelAccess.findOne({email: {$eq: email}});
     }
 
+    async findAccessByUserId(id = "") {
+        return await modelAccess.findOne({user: {$eq: id}}).exec();
+    }
+
     async createAccess(user, publicKey, accessToken, refreshToken) {
         return await modelAccess.create({
             user, email: user.email,
@@ -65,24 +69,43 @@ class ServiceAccess {
         };
     }
 
-    async verifyUserAccount(infor = {email: "", password: ""}, type = "", cb) {
+    /**
+     * 
+     * Phương thức kiểm tra tài khoản hợp lệ đăng nhập
+     */
+    async verifySigninUserAccount(infor = {email: "", password: ""}, cb) {
         let user = await serviceUser.findUserByEmail(infor.email);
 
-        if(type === "Admin" && user.role.name === "Admin") {
-            /**
-             * Kiểm tra passửod người dùng có hợp lệ
-             */
-            bcrypt.compare(infor.password, user.password, async (information) => {
-                let { status } = information;
+        /**
+         * Kiểm tra passửod người dùng có hợp lệ
+         */
+        bcrypt.compare(infor.password, user.password, async (information) => {
+            let { status } = information;
 
-                if(status) {
-                    cb(await this.verifyAdminAccount(user));
-                } else {
-                    cb({status: false, message: "Password incorrect", metadata: {}});
-                }
-            })
+            if(status) {
+                cb(await this.verifyAdminAccount(user));
+            } else {
+                cb({status: false, message: "Password incorrect", metadata: {}});
+            }
+        })
+    }
 
-        }
+
+    /**
+     * Phương thức kiểm tra tài khoản khi đăng xuất khỏi hệ thống
+     */
+    async verifySignoutUserAccount(infor = {email: "", accessToken: "", refreshToken: ""}, cb) {
+        let access = await this.findAccessByUserId(infor.id);
+        
+        access.tokens.push(access.refreshToken);
+        access.publicKey = "";
+        access.accessToken = "";
+        access.refreshToken = "";
+        access.status = false;
+        await access.save();
+
+        cb({status: true});
+
     }
 }
 
