@@ -36,10 +36,11 @@ class ServiceAccess {
          */
         if(!access) {
             access = await this.createAccess(user, publicKey, accessToken, refreshToken);
+            
             return {
                 status: true,
                 message: "User signin success",
-                metadat: {user, accessToken, refreshToken}
+                metadata: {user, accessToken, refreshToken}
             };
 
         }
