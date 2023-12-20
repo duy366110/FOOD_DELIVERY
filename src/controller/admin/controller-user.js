@@ -16,6 +16,15 @@ class ControllerUser {
         });
     }
 
+     /**
+     * Admin truy cập user thông qua id
+    */
+     async getUserById(req, res, next) {
+        let { id } = req.params;
+        let userInfor = await serviceUser.getUserById(id);
+        return res.status(200).json({status: true, message: "Get user success", user: userInfor});
+    }
+
     /**
      * Admin truy cập danh sách user cùng phân trang
      */
@@ -43,6 +52,21 @@ class ControllerUser {
             return res.status(200).json({status: true, message: "Create user account success"});
         } else {
             return res.status(400).json({status: false, message: "Create user account unsuccess"});
+        }
+    }
+
+    /**
+     * Admin thực hiên cập nhật user - không rollback
+     */
+    async updateUserAccount(req, res, next) {
+        let { id, fullName, email, phone, address, role } = req.body;
+        let user = await serviceUser.updateUserAccount({id, fullName, email, phone, address}, role);
+
+        if(user) {
+            return res.status(200).json({status: true, message: "Admin update role success"});
+
+        } else {
+            return res.status(400).json({status: false, message: "Admin update role unsuccess"});
         }
     }
 

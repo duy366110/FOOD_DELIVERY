@@ -39,17 +39,17 @@ class ServiceUser {
     //     }
     // }
 
-    // TRUY XUẤT USER TỬ THEO ID
-    // async getById(id, cb) {
-    //     try {
-    //         let user = await ModelUser.findById(id).populate(['role']).lean();
-    //         cb({status: true, message: 'Get user successfully', user});
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+    /**
+     * Admin truy cập user thông qua id
+    */
+    async getUserById(id) {
+        try {
+            return await modelUser.findById(id).populate(['role']).lean();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin truy xuất user account thông qua id
@@ -98,7 +98,7 @@ class ServiceUser {
                 fullName: user.fullName,
                 email: user.email,
                 password: utilBcrypt.has(user.password),
-                phonenumber: user.phonenumber,
+                phone: user.phone,
                 address: user.address,
                 role: roleInfor
             });
@@ -116,78 +116,37 @@ class ServiceUser {
         }
     }
 
-    // KHÁCH HÀNG ĐĂNG KÝ TÀI KHOẢN
-    // async register(user={}, role = {}, cb) {
-    //     try {
-    //         let userInfor = await ModelUser.create({
-    //             username: user.username,
-    //             fullname: user.fullname,
-    //             email: user.email,
-    //             password: UtilBcrypt.has(user.password),
-    //             phonenumber: user.phone,
-    //             address: user.address,
-    //             role
-    //         });
+    /**
+     * Admin thực hiên cập nhật user - không rollback
+     */
+    async updateUserAccount(user = {}, role = "") {
+        try {
 
-    //         if(userInfor) {
-    //             role.users.push(userInfor);
-    //             await role.save();
-    //             cb({status: true, message: 'Register user successfully', user: userInfor});
+            let userInfor = await modelUser.findById(user.id).populate(['role']).exec();
 
-    //         } else {
-    //             cb({status: false, message: 'Register user unsuccessfully', user: null, error: null});
-    //         }
+            if(userInfor.role._id.toString() !== role) {
+                let roleNew = await serviceRole.findRoleById(role);
 
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+                userInfor.role.users = userInfor.role.users.filter((userRole) => userRole.toString() !== user.id);
+                await userInfor.role.save();
 
-    // VERIFY USER THÔNG QUA TOKEN - AUTHENTIZATION
-    // async verifyAuthorization(token = '', cb) {
-    //     UtilJwt.verify(token.trim(), async (information) => {
-    //         let { status, message, infor } = information;
-            
-    //         if(status && infor) {
-    //             let user = await ModelUser.findOne({email: {$eq: infor.email}}).populate(['bookings']).exec();
-    //             cb({status: true, message, user});
+                roleNew.users.push(userInfor);
+                await roleNew.save();
 
-    //         } else {
-    //             // TOKEN KHÔNG HỢP LỆ
-    //             cb({status: false, message});
-    //         }
-    //     })
-    // }
+                userInfor.role = roleNew;
+            }
 
-    // CẬP NHẬT USER
-    // async update(user = {}, role = {}, cb) {
-    //     try {
+            userInfor.fullName = user.fullName;
+            userInfor.email = user.email;
+            userInfor.phone = user.phone;
+            userInfor.address = user.address;
+            return await userInfor.save();
 
-    //         if(role._id.toString() !== user.model.role._id.toString()) {
-    //             user.model.role.users = user.model.role.users.filter((userElm) => userElm.toString() !== user.model._id.toString());
-    //             user.model.role = role;
-    //             role.users.push(user.model);
-
-    //             await user.model.role.save();
-    //             await role.save();
-    //         }
-
-    //         user.model.username = user.username;
-    //         user.model.fullname = user.fullname;
-    //         user.model.email = user.email;
-    //         user.model.phonenumber = user.phonenumber;
-    //         user.model.address = user.address;
-
-    //         await user.model.save();
-    //         cb({status: true, message: 'Update user successfully'});
-
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin thực hiện xoá user account không rollback
