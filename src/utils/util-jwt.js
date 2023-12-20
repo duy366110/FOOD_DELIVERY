@@ -1,5 +1,6 @@
 "use strict"
-import { sign, verify } from "jsonwebtoken";
+import pkg from "jsonwebtoken";
+let { sign, verify } = pkg;
 
 
 class Jwt {
@@ -7,7 +8,7 @@ class Jwt {
     constructor() { }
 
     sign(infor = {}, privateKey = '', type = '') {
-        return sign({data: infor}, privateKey, { algorithm: 'RS256', expiresIn: type === 'AccessToken'? '3 days' : '7 days'});
+        return sign({data: infor}, privateKey, { algorithm: 'RS256', expiresIn: type === 'accessToken'? '3 days' : '7 days'});
     }
 
     verify(token, publicKey, cb) {
