@@ -1,6 +1,7 @@
 "use strict"
 
 const configDB = {
+    access: "access",
     role: 'roles',
     user: "users"
 }
