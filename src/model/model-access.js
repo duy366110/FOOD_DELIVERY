@@ -17,6 +17,10 @@ const modelAccess = new Schema({
         type: Array,
         default: []
     },
+    publicKey: {
+        type: String,
+        default: ""
+    },
     accessToken: {
         type: String,
         default: ""
