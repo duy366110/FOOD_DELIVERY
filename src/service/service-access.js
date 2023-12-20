@@ -48,7 +48,7 @@ class ServiceAccess {
          * Kiểm tra user account đang hoạt động hay không
          */
         if(access.status) {
-            return {status: false, message: "User not signin", metadat: {}};
+            return {status: false, message: "User not signin", metadata: {}};
         }
 
         access.accessToken = accessToken;
@@ -60,7 +60,7 @@ class ServiceAccess {
         return {
             status: true,
             message: "User signin success",
-            metadat: {user, accessToken, refreshToken}
+            metadata: {user, accessToken, refreshToken}
         };
     }
 
@@ -77,7 +77,7 @@ class ServiceAccess {
                 if(status) {
                     cb(await this.verifyAdminAccount(user));
                 } else {
-                    cb({status: false, message: "Password incorrect", metadat: {}});
+                    cb({status: false, message: "Password incorrect", metadata: {}});
                 }
             })
 
