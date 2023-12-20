@@ -1,24 +1,31 @@
-const jwt = require('jsonwebtoken');
+"use strict"
+import { sign, verify } from "jsonwebtoken";
 
-class JWT {
 
-    serect = 'fodd_delivery_application_website_366110';
+class Jwt {
 
     constructor() { }
 
-    sign(infor = {}, cb) {
-        jwt.sign(infor, this.serect, { expiresIn: 60 * 60 * 24}, (err, token) => {
-            if(err) cb({status: false, message: 'Sign token faile', token: ''});
-            cb({status: true, message: 'Sign token successfully', token});
-        });
+    sign(infor = {}, privateKey = '', type = '') {
+        return sign({data: infor}, privateKey, { algorithm: 'RS256', expiresIn: type === 'AccessToken'? '3 days' : '7 days'});
     }
 
-    verify(token = '', cb) {
-        jwt.verify(token, this.serect, (err, infor) => {
-            if(err) cb({status: false, message: err});
-            cb({status: true, message: 'verify successfully', infor});
-        })
+    verify(token, publicKey, cb) {
+        try {
+            let result = verify(token, publicKey, { algorithms: ['RS256']});
+
+            console.log("Result verify token");
+            console.log(result);
+            cb({status: true});
+            
+        } catch(error) {
+            
+            console.log("Error verify token");
+            console.log(error);
+            cb({status: false});
+        }
     }
+
 }
 
-module.exports = new JWT();
+export default new Jwt();
