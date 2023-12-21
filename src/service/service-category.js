@@ -6,6 +6,30 @@ class ServiceCategory {
     constructor() { }
 
     /**
+     * Get amount category
+     */
+    async getCategoryAmount() {
+        try {
+            return await modelCategory.find({}).countDocuments();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
+     * Admin truy cập danh sách categories cùng phân trang
+     */
+    async getCategories(start = 0, limit = 10) {
+        try {
+            return await modelCategory.find({}).sort({createdAt: -1}).skip(start).limit(limit).lean();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
      * Admin thực hien tạo mới category
      * @param {*} infor 
      * @param {*} files 
@@ -28,6 +52,7 @@ class ServiceCategory {
             })
 
         } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
             throw error;
         }
     }
