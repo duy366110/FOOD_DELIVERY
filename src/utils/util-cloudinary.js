@@ -1,16 +1,22 @@
-require('dotenv').config();
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("cloudinary").v2;
-const ConfigEnv = require("../configs/config.env");
+"use strict"
+// const { CloudinaryStorage } = require("multer-storage-cloudinary");
+// const cloudinary = require("cloudinary").v2;
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 } from "cloudinary";
+import config from "../config/config.js";
+const cloudinary = v2;
 
 
-class CLOUDINARY {
+
+class Cloudinary {
 
     constructor() {
+        console.log(config.cloudinary);
+        
         cloudinary.config({
-            cloud_name: ConfigEnv.CLOUDINARY_NAME,
-            api_key: ConfigEnv.CLOUDINARY_KEY,
-            api_secret: ConfigEnv.CLOUDINARY_SECRET,
+            cloud_name: config.cloudinary.name,
+            api_key: config.cloudinary.key,
+            api_secret: config.cloudinary.secret,
         })
     }
 
@@ -22,7 +28,7 @@ class CLOUDINARY {
             cb(null, file.originalname); 
         },
         params: {
-            folder: ConfigEnv.CLOUDINARY_DIRECTORY,
+            folder: config.cloudinary.directory,
         }
     })
 
@@ -64,4 +70,4 @@ class CLOUDINARY {
     }
 }
 
-module.exports = new CLOUDINARY();
+export default new Cloudinary();
