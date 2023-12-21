@@ -96,16 +96,24 @@ class ServiceAccess {
      */
     async verifySignoutUserAccount(infor = {email: "", accessToken: "", refreshToken: ""}, cb) {
         let access = await this.findAccessByUserId(infor.id);
-        
-        access.tokens.push(access.refreshToken);
-        access.publicKey = "";
-        access.accessToken = "";
-        access.refreshToken = "";
-        access.status = false;
-        await access.save();
 
-        cb({status: true});
+        jwt.verify(infor.accessToken, access.publicKey, async (information) => {
+            let { status } = information;
 
+            if(status) {
+                access.tokens.push(access.refreshToken);
+                access.publicKey = "";
+                access.accessToken = "";
+                access.refreshToken = "";
+                access.status = false;
+                await access.save();
+                
+                cb({status: true});
+
+            } else {
+                cb({status: false});
+            }
+        })
     }
 }
 

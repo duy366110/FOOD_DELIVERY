@@ -21,7 +21,13 @@ class ControllerAccess {
         let {id, accessToken, refreshToken} = req.body;
 
         await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
-            return res.status(200).json({status: true, message: "User signout success"});
+            let { status } = information;
+            if(status) {
+                return res.status(200).json({status: true, message: "User signout success"});
+
+            } else {
+                return res.status(400).json({status: false, message: "User signout unsuccess"});
+            }
         });
     }
 }
