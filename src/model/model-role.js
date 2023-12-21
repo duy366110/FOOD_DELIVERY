@@ -1,3 +1,4 @@
+"use strict"
 import mongoose from "mongoose";
 import configDB from "../config/config-db.js";
 const Schema = mongoose.Schema;

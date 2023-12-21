@@ -11,8 +11,6 @@ const cloudinary = v2;
 class Cloudinary {
 
     constructor() {
-        console.log(config.cloudinary);
-        
         cloudinary.config({
             cloud_name: config.cloudinary.name,
             api_key: config.cloudinary.key,

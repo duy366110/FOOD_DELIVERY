@@ -1,9 +1,8 @@
 "use strict"
 import { Router } from "express";
+import controllerCategory from "../../controller/admin/controller-category.js";
 const router = Router();
 
-router.post("/new", (req, res, next) => {
-    return res.status(200).json({status: true, message: "Create category success"});
-})
+router.post("/new", controllerCategory.createCategory);
 
 export default router;

@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json(true));
 app.use(middlewareCors.cors);
 
-app.use(multer({ storage: cloudinary.storage }).any('photos'));
+app.use(multer({ storage: cloudinary.storage }).any('thumb'));
 
 app.use("/v1/api", router);
 app.use("/v1/api/admin", routerAdmin);
