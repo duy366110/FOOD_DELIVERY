@@ -2,8 +2,9 @@
 
 const configDB = {
     access: "access",
+    category: "categories",
     role: 'roles',
-    user: "users"
+    user: "users",
 }
 
 export default configDB;
