@@ -31,8 +31,23 @@ class ControllerCategory {
     }
 
     /**
-     * Admin tạo mới category
+     * Admin truy cập category thông qua ID
      * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async getCategoryById(req, res, next) {
+        let { id } = req.params;
+        return res.status(200).json({
+            status: true,
+            message: 'Get category success',
+            category: await serviceCategory.getCategoryById(id),
+        })
+    }
+
+    /**
+     * Admin tạo mới category
+     * @param {*} req
      * @param {*} res 
      * @param {*} next 
      * @returns 
@@ -45,6 +60,25 @@ class ControllerCategory {
 
         } else {
             return res.status(400).json({status: false, message: "Create category unsuccess"});
+        }
+    }
+
+    /**
+     * Admin cập nhật thông tin category
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     * @returns 
+     */
+    async updateCategory(req, res, next) {
+        let {category, title, titleSub, desc } = req.body;
+        let categoryInfor = await serviceCategory.updateCategory({category, title, titleSub, desc}, req.files);
+        
+        if(categoryInfor) {
+            return res.status(200).json({status: true, message: "Update category success"});
+
+        } else {
+            return res.status(400).json({status: false, message: "Update category unsuccess"});
         }
     }
 
