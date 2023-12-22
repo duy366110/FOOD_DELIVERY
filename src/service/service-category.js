@@ -1,9 +1,35 @@
 "use strict"
 import modelCategory from "../model/model-category.js";
+import utilCloudinary from "../utils/util-cloudinary.js";
+import config from "../config/config.js";
 
 class ServiceCategory {
 
     constructor() { }
+
+    /**
+     * Get amount category
+     */
+    async getCategoryAmount() {
+        try {
+            return await modelCategory.find({}).countDocuments();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
+     * Admin truy cập danh sách categories cùng phân trang
+     */
+    async getCategories(start = 0, limit = 10) {
+        try {
+            return await modelCategory.find({}).sort({createdAt: -1}).skip(start).limit(limit).lean();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin thực hien tạo mới category
@@ -28,6 +54,30 @@ class ServiceCategory {
             })
 
         } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
+     * Admin thực hiện xoá resource
+     * @param {*} category 
+     */
+    async deleteCategory(category = "") {
+        try {
+            let categoryInfor = await modelCategory.findById(category);
+            let thumbs = [];
+            
+            thumbs = categoryInfor.thumbs.map((thumb) => {
+                let image = thumb.split("/").splice(-1)[0].split(".")[0];
+                return `${config.cloudinary.directory}/${image}`;
+            })
+            await utilCloudinary.destroyMany(thumbs);
+            let { deletedCount } =  await categoryInfor.deleteOne();
+            return { status: deletedCount? true : false };
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
             throw error;
         }
     }

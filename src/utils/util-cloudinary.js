@@ -1,6 +1,4 @@
 "use strict"
-// const { CloudinaryStorage } = require("multer-storage-cloudinary");
-// const cloudinary = require("cloudinary").v2;
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 } from "cloudinary";
 import config from "../config/config.js";
