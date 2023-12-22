@@ -3,6 +3,7 @@ import { Router } from "express";
 import controllerCategory from "../../controller/admin/controller-category.js";
 const router = Router();
 
+router.get("/all", controllerCategory.getAllCategory);
 router.get("/amount", controllerCategory.getCategoryAmount);
 router.get("/:start/:limit", controllerCategory.getCategories);
 router.get("/:id", controllerCategory.getCategoryById);
