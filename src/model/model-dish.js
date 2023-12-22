@@ -4,7 +4,7 @@ import configDb from "../config/config-db.js";
 
 const Schema = mongoose.Schema;
 
-const modelAccess = new Schema({
+const modelDish = new Schema({
     title: {
         type: String,
         default: ""
@@ -17,21 +17,23 @@ const modelAccess = new Schema({
         type: String,
         default: ""
     },
+    price: {
+        type: Schema.Types.Decimal128,
+        default: 0
+    },
     thumbs: [
         {
             type: String,
             default: ''
         }
     ],
-    dishs: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: configDb.dish
-        }
-    ]
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: configDb.category
+    }
 }, {
-    collection: configDb.category,
+    collection: configDb.dish,
     timestamps: true
 })
 
-export default mongoose.model(configDb.category, modelAccess);
+export default mongoose.model(configDb.dish, modelDish);
