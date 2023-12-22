@@ -12,7 +12,7 @@ class ServiceCategory {
      */
     async getCategoryAmount() {
         try {
-            return await modelCategory.find({}).countDocuments();
+            return await modelCategory.find({}).count();
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI
             throw error;
