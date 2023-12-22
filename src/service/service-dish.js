@@ -33,16 +33,16 @@ class ServiceDish {
     }
 
     /**
-     * Admin get category theo id
+     * Admin get dish theo id
      */
-    // async getCategoryById(category = "") {
-    //     try {
-    //         return await modelCategory.findById(category).lean();
-    //     } catch(error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+    async getDishById(dish = "") {
+        try {
+            return await modelDish.findById(dish).lean();
+        } catch(error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin thực hien tạo mới dish
@@ -80,61 +80,79 @@ class ServiceDish {
         }
     }
 
-    // async updateCategory(infor = {category: "", title: "", titleSub: "", desc: ""}, files = []) {
-    //     try {
-    //         let category = await modelCategory.findById(infor.category);
 
-    //         if(files.length) {
-    //             let photos = [];
+    /**
+     * Admin thực hiện cập nhật dish
+     * @param {*} infor 
+     * @param {*} files 
+     */
+    async updateDish(infor = {dish: "", title: "", titleSub: "", price: 0, desc: "", category: ""}, files = []) {
+        try {
+            let dish = await modelDish.findById(infor.dish).populate(['category']).exec();
 
-    //             // Thực hiện xoá file cũa và cập nhật file mới
-    //             let thumbs = category.thumbs.map((thumb) => {
-    //                 let image = thumb.split("/").splice(-1)[0].split(".")[0];
-    //                 return `${config.cloudinary.directory}/${image}`;
-    //             })
-    //             await utilCloudinary.destroyMany(thumbs);
+            if(dish.category._id.toString() !== infor.category) {
+                // Xoa category cu
+                dish.category.dishs = dish.category.dishs.filter((dishCategory) => dishCategory.toString() !== dish._id.toString());
 
-    //             // Thực hiện cập nhật file mới
-    //             photos = files.map((photo) => {
-    //                 return photo.path;
-    //             })
-    //             category.thumbs = [];
-    //             category.thumbs = photos;
-    //         }
+                // Cap nhat category moi
+                let category = await serviceCategory.findCategoryById(infor.category);
+                category.dishs.push(dish);
+                await category.save();
 
-    //         category.title = infor.title;
-    //         category.titleSub = infor.titleSub;
-    //         category.desc = infor.desc;
-    //         return await category.save();
+                dish.category = category;
+            }
 
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+            if(files.length) {
+                let photos = [];
+                // Thực hiện xoá file cũa và cập nhật file mới
+                let thumbs = dish.thumbs.map((thumb) => {
+                    let image = thumb.split("/").splice(-1)[0].split(".")[0];
+                    return `${config.cloudinary.directory}/${image}`;
+                })
+                await utilCloudinary.destroyMany(thumbs);
+
+                // Thực hiện cập nhật file mới
+                photos = files.map((photo) => {
+                    return photo.path;
+                })
+                dish.thumbs = [];
+                dish.thumbs = photos;
+            }
+
+            dish.title = infor.title;
+            dish.titleSub = infor.titleSub;
+            dish.desc = infor.desc;
+            dish.price = infor.price;
+            return await dish.save();
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin thực hiện xoá resource
      * @param {*} category 
      */
-    // async deleteCategory(category = "") {
-    //     try {
-    //         let categoryInfor = await modelCategory.findById(category);
-    //         let thumbs = [];
+    async deleteDish(dish = "") {
+        try {
+            let dishInfor = await modelDish.findById(dish);
+            let thumbs = [];
             
-    //         thumbs = categoryInfor.thumbs.map((thumb) => {
-    //             let image = thumb.split("/").splice(-1)[0].split(".")[0];
-    //             return `${config.cloudinary.directory}/${image}`;
-    //         })
-    //         await utilCloudinary.destroyMany(thumbs);
-    //         let { deletedCount } =  await categoryInfor.deleteOne();
-    //         return { status: deletedCount? true : false };
+            thumbs = dishInfor.thumbs.map((thumb) => {
+                let image = thumb.split("/").splice(-1)[0].split(".")[0];
+                return `${config.cloudinary.directory}/${image}`;
+            })
+            await utilCloudinary.destroyMany(thumbs);
+            let { deletedCount } =  await dishInfor.deleteOne();
+            return { status: deletedCount? true : false };
 
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 }
 
 export default new ServiceDish();

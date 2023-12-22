@@ -31,25 +31,25 @@ class ControllerCategory {
     }
 
     /**
-     * Admin truy cập category thông qua ID
+     * Admin truy cập dish thông qua ID
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      */
-    // async getCategoryById(req, res, next) {
-    //     let { id } = req.params;
-    //     return res.status(200).json({
-    //         status: true,
-    //         message: 'Get category success',
-    //         category: await serviceCategory.getCategoryById(id),
-    //     })
-    // }
+    async getDishById(req, res, next) {
+        let { id } = req.params;
+        return res.status(200).json({
+            status: true,
+            message: 'Get dish success',
+            dish: await serviceDish.getDishById(id),
+        })
+    }
 
     /**
      * Admin tạo mới dish
      * @param {*} req
      * @param {*} res 
-     * @param {*} next 
+     * @param {*} next
      * @returns 
      */
     async createDish(req, res, next) {
@@ -64,41 +64,41 @@ class ControllerCategory {
     }
 
     /**
-     * Admin cập nhật thông tin category
+     * Admin cập nhật thông tin dish
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      * @returns 
      */
-    // async updateCategory(req, res, next) {
-    //     let {category, title, titleSub, desc } = req.body;
-    //     let categoryInfor = await serviceCategory.updateCategory({category, title, titleSub, desc}, req.files);
-        
-    //     if(categoryInfor) {
-    //         return res.status(200).json({status: true, message: "Update category success"});
+    async updateDish(req, res, next) {
+        let { dish, title, titleSub, desc, price, category } = req.body;
+         let dishInfor = await serviceDish.updateDish({dish, title, titleSub, price, desc, category}, req.files);
 
-    //     } else {
-    //         return res.status(400).json({status: false, message: "Update category unsuccess"});
-    //     }
-    // }
+        if(dishInfor) {
+            return res.status(200).json({status: true, message: "Create dish success"});
+
+        } else {
+            return res.status(400).json({status: false, message: "Create dish unsuccess"});
+        }
+    }
 
     /**
-     * Admin xoá resource category
+     * Admin xoá resource dish
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      * @returns 
      */
-    // async deleteCategory(req, res, next) {
-    //     let { category } = req.body;
-    //     let { status } = await serviceCategory.deleteCategory(category);
+    async deleteDish(req, res, next) {
+        let { dish } = req.body;
+        let { status } = await serviceDish.deleteDish(dish);
         
-    //     if(status) {
-    //         return res.status(200).json({status: true, message: "Delete categogy success"});
-    //     } else {
-    //         return res.status(400).json({status: false, message: "Delete categogy unsuccess"});
-    //     }
-    // }
+        if(status) {
+            return res.status(200).json({status: true, message: "Delete dish success"});
+        } else {
+            return res.status(400).json({status: false, message: "Delete dish unsuccess"});
+        }
+    }
 }
 
 export default new ControllerCategory();
