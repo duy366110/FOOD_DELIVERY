@@ -1,5 +1,5 @@
 "use strict"
-import serviceCategory from "../../service/service-category.js";
+import serviceDish from "../../service/service-dish.js";
 
 class ControllerCategory {
 
@@ -46,22 +46,22 @@ class ControllerCategory {
     // }
 
     /**
-     * Admin tạo mới category
+     * Admin tạo mới dish
      * @param {*} req
      * @param {*} res 
      * @param {*} next 
      * @returns 
      */
-    // async createCategory(req, res, next) {
-    //     let { title, titleSub, desc } = req.body;
-    //     let category = await serviceCategory.createCategory({title, titleSub, desc}, req.files);
-    //     if(category) {
-    //         return res.status(200).json({status: true, message: "Create category success"});
+    async createDish(req, res, next) {
+        let { title, titleSub, desc, price, category } = req.body;
+        let dish = await serviceDish.createDish({title, titleSub, price, desc, category}, req.files);
+        if(dish) {
+            return res.status(200).json({status: true, message: "Create dish success"});
 
-    //     } else {
-    //         return res.status(400).json({status: false, message: "Create category unsuccess"});
-    //     }
-    // }
+        } else {
+            return res.status(400).json({status: false, message: "Create dish unsuccess"});
+        }
+    }
 
     /**
      * Admin cập nhật thông tin category

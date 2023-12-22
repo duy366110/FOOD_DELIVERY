@@ -22,11 +22,24 @@ class ControllerCategory {
      */
     async getCategories(req, res, next) {
         let {start, limit} = req.params;
-
         return res.status(200).json({
             status: true,
             message: "Get categories success",
             categories: await serviceCategory.getCategories(start, limit)
+        })
+    }
+
+    /**
+     * Admin truy xuất toàn bộ category hiện có
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async getAllCategory(req, res, next) {
+        return res.status(200).json({
+            status: true,
+            message: "Get categories success",
+            categories: await serviceCategory.getAllCategory()
         })
     }
 

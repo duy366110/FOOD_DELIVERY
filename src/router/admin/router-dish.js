@@ -6,7 +6,7 @@ const router = Router();
 // router.get("/amount", controllerCategory.getCategoryAmount);
 // router.get("/:start/:limit", controllerCategory.getCategories);
 // router.get("/:id", controllerCategory.getCategoryById);
-// router.post("/new", controllerCategory.createCategory);
+router.post("/new", controllerDish.createDish);
 // router.post("/update", controllerCategory.updateCategory);
 // router.post("/delete", controllerCategory.deleteCategory);
 

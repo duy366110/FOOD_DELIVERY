@@ -32,12 +32,39 @@ class ServiceCategory {
     }
 
     /**
+     * Admin truy xuất toàn bộ category hiện có
+     * @returns 
+     */
+    async getAllCategory() {
+        try {
+            return await modelCategory.find({}).lean();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
      * Admin get category theo id
      */
     async getCategoryById(category = "") {
         try {
             return await modelCategory.findById(category).lean();
         } catch(error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
+     * Admin truy xuất category theo ID.
+     * @param {*} category 
+     * @returns 
+     */
+    async findCategoryById(category = "") {
+        try {
+            return await modelCategory.findById(category).exec();
+        } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI
             throw error;
         }

@@ -1,6 +1,6 @@
 "use strict"
 import modelDish from "../model/model-dish.js";
-import modelCategory from "../model/model-category.js";
+import serviceCategory from "./service-category.js";
 import utilCloudinary from "../utils/util-cloudinary.js";
 import config from "../config/config.js";
 
@@ -45,32 +45,40 @@ class ServiceDish {
     // }
 
     /**
-     * Admin thực hien tạo mới category
+     * Admin thực hien tạo mới dish
      * @param {*} infor 
      * @param {*} files 
      * @returns 
      */
-    // async createCategory(infor = {title: "", titleSub: "", desc: ""}, files = []) {
-    //     try {
-    //         let photos = [];
-    //         if(files.length) {
-    //             photos = files.map((photo) => {
-    //                 return photo.path;
-    //             })
-    //         }
+    async createDish(infor = {title: "", titleSub: "", price: 0, desc: "", category: ""}, files = []) {
+        try {
+            let photos = [];
+            let category = await serviceCategory.findCategoryById(infor.category);
 
-    //         return await modelCategory.create({
-    //             title: infor.title,
-    //             titleSub: infor.titleSub,
-    //             desc: infor.desc,
-    //             thumbs: photos
-    //         })
+            if(files.length) {
+                photos = files.map((photo) => {
+                    return photo.path;
+                })
+            }
 
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+            let dish = await modelDish.create({
+                title: infor.title,
+                titleSub: infor.titleSub,
+                price: infor.price,
+                desc: infor.desc,
+                thumbs: photos,
+                category
+            })
+
+            category.dishs.push(dish);
+            await category.save();
+            return dish;
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     // async updateCategory(infor = {category: "", title: "", titleSub: "", desc: ""}, files = []) {
     //     try {

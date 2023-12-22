@@ -10,7 +10,7 @@ const router = Router();
 router.use("/role", routerRole);
 router.use("/user", routerUser);
 router.use("/category", routerCategory);
-router.use("/category", routerDish);
+router.use("/dish", routerDish);
 
 
 export default router;
