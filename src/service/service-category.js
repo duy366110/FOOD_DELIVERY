@@ -1,5 +1,7 @@
 "use strict"
 import modelCategory from "../model/model-category.js";
+import utilCloudinary from "../utils/util-cloudinary.js";
+import config from "../config/config.js";
 
 class ServiceCategory {
 
@@ -50,6 +52,29 @@ class ServiceCategory {
                 desc: infor.desc,
                 thumbs: photos
             })
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
+    /**
+     * Admin thực hiện xoá resource
+     * @param {*} category 
+     */
+    async deleteCategory(category = "") {
+        try {
+            let categoryInfor = await modelCategory.findById(category);
+            let thumbs = [];
+            
+            thumbs = categoryInfor.thumbs.map((thumb) => {
+                let image = thumb.split("/").splice(-1)[0].split(".")[0];
+                return `${config.cloudinary.directory}/${image}`;
+            })
+            await utilCloudinary.destroyMany(thumbs);
+            let { deletedCount } =  await categoryInfor.deleteOne();
+            return { status: deletedCount? true : false };
 
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI

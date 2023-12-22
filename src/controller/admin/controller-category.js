@@ -47,6 +47,24 @@ class ControllerCategory {
             return res.status(400).json({status: false, message: "Create category unsuccess"});
         }
     }
+
+    /**
+     * Admin xoá resource category
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     * @returns 
+     */
+    async deleteCategory(req, res, next) {
+        let { category } = req.body;
+        let { status } = await serviceCategory.deleteCategory(category);
+        
+        if(status) {
+            return res.status(200).json({status: true, message: "Delete categogy success"});
+        } else {
+            return res.status(400).json({status: false, message: "Delete categogy unsuccess"});
+        }
+    }
 }
 
 export default new ControllerCategory();
