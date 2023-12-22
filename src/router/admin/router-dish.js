@@ -5,9 +5,9 @@ const router = Router();
 
 router.get("/amount", controllerDish.getDishAmount);
 router.get("/:start/:limit", controllerDish.getDishs);
-// router.get("/:id", controllerCategory.getCategoryById);
+router.get("/:id", controllerDish.getDishById);
 router.post("/new", controllerDish.createDish);
-// router.post("/update", controllerCategory.updateCategory);
-// router.post("/delete", controllerCategory.deleteCategory);
+router.post("/update", controllerDish.updateDish);
+router.post("/delete", controllerDish.deleteDish);
 
 export default router;
