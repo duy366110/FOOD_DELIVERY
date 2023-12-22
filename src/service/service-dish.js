@@ -9,28 +9,28 @@ class ServiceDish {
     constructor() { }
 
     /**
-     * Get amount category
+     * Get amount dish
      */
-    // async getCategoryAmount() {
-    //     try {
-    //         return await modelCategory.find({}).countDocuments();
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+    async getDishAmount() {
+        try {
+            return await modelDish.find({}).count();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
-     * Admin truy cập danh sách categories cùng phân trang
+     * Admin truy cập danh sách dish cùng phân trang
      */
-    // async getCategories(start = 0, limit = 10) {
-    //     try {
-    //         return await modelCategory.find({}).sort({createdAt: -1}).skip(start).limit(limit).lean();
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         throw error;
-    //     }
-    // }
+    async getDishs(start = 0, limit = 10) {
+        try {
+            return await modelDish.find({}).sort({createdAt: -1}).skip(start).limit(limit).lean();
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
 
     /**
      * Admin get category theo id

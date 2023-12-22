@@ -6,29 +6,29 @@ class ControllerCategory {
     constructor() {}
 
     /**
-     * Truy cập số lượng category
+     * Truy cập số lượng dish
      * @param {*} req 
      * @param {*} res 
      * @param {*} next 
      * @returns 
      */
-    // async getCategoryAmount(req, res, next) {
-    //     let amount = await serviceCategory.getCategoryAmount();
-    //     return res.status(200).json({status: true, message: "Get actegory amount", amount})
-    // }
+    async getDishAmount(req, res, next) {
+        let amount = await serviceDish.getDishAmount();
+        return res.status(200).json({status: true, message: "Get dish amount", amount})
+    }
 
     /**
-     * Admin truy cập danh sách category cùng phân trang
+     * Admin truy cập danh sách dish cùng phân trang
      */
-    // async getCategories(req, res, next) {
-    //     let {start, limit} = req.params;
+    async getDishs(req, res, next) {
+        let {start, limit} = req.params;
 
-    //     return res.status(200).json({
-    //         status: true,
-    //         message: "Get categories success",
-    //         categories: await serviceCategory.getCategories(start, limit)
-    //     })
-    // }
+        return res.status(200).json({
+            status: true,
+            message: "Get dish success",
+            dishs: await serviceDish.getDishs(start, limit)
+        })
+    }
 
     /**
      * Admin truy cập category thông qua ID
