@@ -5,6 +5,23 @@ class ControllerAccess {
     constructor() { }
 
     /**
+     * Client signin
+     */
+    async signin(req, res, next) {
+        let { email, password } = req.body;
+        await serviceAccess.verifySigninUserAccount({email, password}, 'Client', (information) => {
+            return res.status(200).json(information);
+        });
+    }
+
+    async signout(req, res, next) {
+        let {id, accessToken, refreshToken} = req.body;
+        await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
+            return res.status(200).json(information);
+        });
+    }
+
+    /**
      * Admin đăng nhập vào console
      */
     async adminSignin(req, res, next) {
@@ -19,7 +36,6 @@ class ControllerAccess {
      */
     async adminSignout(req, res, next) {
         let {id, accessToken, refreshToken} = req.body;
-
         await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
             return res.status(200).json(information);
         });
