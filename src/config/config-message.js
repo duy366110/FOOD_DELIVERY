@@ -13,6 +13,7 @@ const configMessage = {
             "002": "Password incorrect",
             "003": "User signout unsuccess",
             "004": "User account not permission",
+            "005": "User signup account unsuccess",
         }
     }
 }

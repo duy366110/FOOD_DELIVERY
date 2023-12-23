@@ -44,7 +44,7 @@ class ControllerUser {
      */
     async createUserAccount(req, res, next) {
         let { fullName, email, password, phone, address, role } = req.body;
-        let status = await serviceUser.createUserAccount({
+        let { status } = await serviceUser.createUserAccount({
             fullName, email, password, phone, address
         }, role);
 
