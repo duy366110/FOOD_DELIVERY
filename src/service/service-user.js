@@ -106,9 +106,9 @@ class ServiceUser {
             if(userInfor) {
                 roleInfor.users.push(userInfor);
                 await roleInfor.save();
-                return true;
+                return {status: true, user: userInfor};
             }
-            return false;
+            return {status: false, user: null};
 
         } catch (error) {
             // THỰC HIỆN PHƯƠNG THỨC LỖI

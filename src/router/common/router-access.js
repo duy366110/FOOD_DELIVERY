@@ -4,6 +4,7 @@ const router = Router();
 
 router.post("/signin", controllerAccess.signin);
 router.post("/signout", controllerAccess.signout);
+router.post("/signup", controllerAccess.signup);
 
 router.post("/admin/signin", controllerAccess.adminSignin);
 router.post("/admin/signout", controllerAccess.adminSignout);

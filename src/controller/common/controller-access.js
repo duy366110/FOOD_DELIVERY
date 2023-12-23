@@ -14,6 +14,9 @@ class ControllerAccess {
         });
     }
 
+    /**
+     * Client signout
+     */
     async signout(req, res, next) {
         let {id, accessToken, refreshToken} = req.body;
         await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
@@ -22,7 +25,17 @@ class ControllerAccess {
     }
 
     /**
-     * Admin đăng nhập vào console
+     * Client signup account
+     */
+    async signup(req, res, next) {
+        let {fullName, email, password, phone, address} = req.body;
+        await serviceAccess.signupUserAccount({fullName, email, password, phone, address}, (information) => {
+            return res.status(200).json(information);
+        })
+    }
+
+    /**
+     * Admin signin to console
      */
     async adminSignin(req, res, next) {
         let { email, password } = req.body;
@@ -32,7 +45,7 @@ class ControllerAccess {
     }
 
     /**
-     * Admin đăng xuất khỏi console
+     * Admin signout console
      */
     async adminSignout(req, res, next) {
         let {id, accessToken, refreshToken} = req.body;

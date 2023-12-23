@@ -64,6 +64,17 @@ class serviceRole {
     }
 
     /**
+     * Find role by name
+     */
+    async findRoleByName(name = "") {
+        try {
+            return await modelRole.findOne({name: {$eq: name}}).exec();
+        } catch(error) {
+            throw error;
+        }
+    }
+
+    /**
      * Kiểm tra role đã tồn tại hay chưa
      * @param {*} nameRole 
      * @returns 

@@ -1,5 +1,6 @@
 "use strict"
 import modelAccess from "../model/model-access.js";
+import serviceRole from "./service-role.js";
 import serviceUser from "./service-user.js";
 import bcrypt from "../utils/util-bcrypt.js";
 import crypto from "../utils/util-crypto.js";
@@ -103,8 +104,19 @@ class ServiceAccess {
     /**
      * Client register account
      */
-    async signupUserAccount() {
+    async signupUserAccount(infor = {fullName: "", email: "", password: "", phone: "", address: ""}, cb) {
+        let role = await serviceRole.findRoleByName('Client');
+        let {status, user} = await serviceUser.createUserAccount(infor, role._id.toString());
 
+        if(status) {
+            cb(await this.verifyUserAccount(user));
+        } else {
+            cb({
+                status: false,
+                message: configMessage.success.access['001'],
+                metadata: {}
+            })
+        }
     }
 
 
