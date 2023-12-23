@@ -9,7 +9,7 @@ class ControllerAccess {
      */
     async adminSignin(req, res, next) {
         let { email, password } = req.body;
-        await serviceAccess.verifySigninUserAccount({email, password}, (information) => {
+        await serviceAccess.verifySigninUserAccount({email, password}, 'Admin', (information) => {
             return res.status(200).json(information);
         });
     }
@@ -21,13 +21,7 @@ class ControllerAccess {
         let {id, accessToken, refreshToken} = req.body;
 
         await serviceAccess.verifySignoutUserAccount({id, accessToken, refreshToken}, (information) => {
-            let { status } = information;
-            if(status) {
-                return res.status(200).json({status: true, message: "User signout success"});
-
-            } else {
-                return res.status(400).json({status: false, message: "User signout unsuccess"});
-            }
+            return res.status(200).json(information);
         });
     }
 }

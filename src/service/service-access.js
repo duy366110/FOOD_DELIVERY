@@ -4,7 +4,7 @@ import serviceUser from "./service-user.js";
 import bcrypt from "../utils/util-bcrypt.js";
 import crypto from "../utils/util-crypto.js";
 import jwt from "../utils/util-jwt.js";
-
+import configMessage from "../config/config-message.js";
 
 class ServiceAccess {
 
@@ -43,7 +43,7 @@ class ServiceAccess {
             
             return {
                 status: true,
-                message: "User signin success",
+                message: configMessage.success.access['001'],
                 metadata: {user, accessToken, refreshToken}
             };
 
@@ -53,7 +53,7 @@ class ServiceAccess {
          * Kiểm tra user account đang hoạt động hay không
          */
         if(access.status) {
-            return {status: false, message: "User not signin", metadata: {}};
+            return {status: false, message: configMessage.error.access['001'], metadata: {}};
         }
 
         access.accessToken = accessToken;
@@ -64,35 +64,38 @@ class ServiceAccess {
 
         return {
             status: true,
-            message: "User signin success",
+            message: configMessage.success.access['001'],
             metadata: {user, accessToken, refreshToken}
         };
     }
 
     /**
      * 
-     * Phương thức kiểm tra tài khoản hợp lệ đăng nhập
+     * Verify user account signin
      */
-    async verifySigninUserAccount(infor = {email: "", password: ""}, cb) {
+    async verifySigninUserAccount(infor = {email: "", password: ""}, type = "", cb) {
         let user = await serviceUser.findUserByEmail(infor.email);
 
         /**
-         * Kiểm tra passửod người dùng có hợp lệ
+         * Verify password
          */
         bcrypt.compare(infor.password, user.password, async (information) => {
             let { status } = information;
 
             if(status) {
-                cb(await this.verifyAdminAccount(user));
+                if(type === "Admin") {
+                    cb(await this.verifyAdminAccount(user));
+                }
+                
             } else {
-                cb({status: false, message: "Password incorrect", metadata: {}});
+                cb({status: false, message: configMessage.error.access['002'], metadata: {}});
             }
         })
     }
 
 
     /**
-     * Phương thức kiểm tra tài khoản khi đăng xuất khỏi hệ thống
+     * Verify user account signout
      */
     async verifySignoutUserAccount(infor = {email: "", accessToken: "", refreshToken: ""}, cb) {
         let access = await this.findAccessByUserId(infor.id);
@@ -108,10 +111,9 @@ class ServiceAccess {
                 access.status = false;
                 await access.save();
                 
-                cb({status: true});
-
+                cb({status: true, message: configMessage.success.access['002']});
             } else {
-                cb({status: false});
+                cb({status: false, message: configMessage.error.access['003']});
             }
         })
     }
