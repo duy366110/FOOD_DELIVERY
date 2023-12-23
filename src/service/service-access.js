@@ -28,7 +28,7 @@ class ServiceAccess {
         })
     }
 
-    async verifyAdminAccount(user = {}) {
+    async verifyUserAccount(user = {}) {
         let access =  await this.findAccessByUserEmail(user.email);
 
         let {publicKey, privateKey} = crypto.generateKeyPairSync();
@@ -84,13 +84,27 @@ class ServiceAccess {
 
             if(status) {
                 if(type === "Admin") {
-                    cb(await this.verifyAdminAccount(user));
+                    if(user.role.name === "Admin") {
+                        cb(await this.verifyUserAccount(user));
+
+                    } else {
+                        cb({status: false, message: configMessage.error.access['004'], metadata: {}});
+                    }
+                } else {
+                    cb(await this.verifyUserAccount(user));
                 }
                 
             } else {
                 cb({status: false, message: configMessage.error.access['002'], metadata: {}});
             }
         })
+    }
+
+    /**
+     * Client register account
+     */
+    async signupUserAccount() {
+
     }
 
 
