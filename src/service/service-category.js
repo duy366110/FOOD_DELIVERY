@@ -45,6 +45,17 @@ class ServiceCategory {
     }
 
     /**
+     * Client get all category with dish
+     */
+    async getAllCategoryWithDish() {
+        try {
+            return await modelCategory.find({}).populate(['dishs']).lean();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
      * Admin get category theo id
      */
     async getCategoryById(category = "") {
