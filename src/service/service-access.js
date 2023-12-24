@@ -29,17 +29,6 @@ class ServiceAccess {
                         {
                             model: "users",
                             path: 'user',
-                            populate: [
-                                {
-                                    path: "order",
-                                    populate: [
-                                        {
-                                            model: "dishs",
-                                            path: "dish",
-                                        }
-                                    ]
-                                }
-                            ]
                         }
                     ])
                     .exec();

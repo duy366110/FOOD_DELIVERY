@@ -27,18 +27,6 @@ class ServiceUser {
         }
     }
 
-    // LẤY DANH SÁCH USER
-    // async getAll(cb) {
-    //     try {
-    //         let users = await ModelUser.find({}).select(['username', 'fullname', 'email', 'phonenumber']).lean();
-    //         cb({status: true, message: 'Get users successfully', users});
-
-    //     } catch (error) {
-    //         // THỰC HIỆN PHƯƠNG THỨC LỖI
-    //         cb({status: false, message: 'Method failed', error});
-    //     }
-    // }
-
     /**
      * Admin truy cập user thông qua id
     */
