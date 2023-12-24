@@ -29,6 +29,18 @@ const modelUser = new Schema({
         ref: configDb.role,
         required: true
     },
+    order: [
+        {
+            dish: {
+                type: Schema.Types.ObjectId,
+                ref: ''
+            },
+            quantity: {
+                type: Number,
+                default: 0
+            }
+        }
+    ]
 }, {
     collection: configDb.user,
     timestamps: true

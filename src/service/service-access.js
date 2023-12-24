@@ -19,6 +19,32 @@ class ServiceAccess {
         return await modelAccess.findOne({user: {$eq: id}}).exec();
     }
 
+    /**
+     * Verify user account when order dish
+     */
+    async verifyUserAccountWhenOrder(infor = {user: ""}) {
+        return await modelAccess
+                    .findOne({user: {$eq: infor.user}})
+                    .populate([
+                        {
+                            model: "users",
+                            path: 'user',
+                            populate: [
+                                {
+                                    path: "order",
+                                    populate: [
+                                        {
+                                            model: "dishs",
+                                            path: "dish",
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ])
+                    .exec();
+    }
+
     async createAccess(user, publicKey, accessToken, refreshToken) {
         return await modelAccess.create({
             user, email: user.email,

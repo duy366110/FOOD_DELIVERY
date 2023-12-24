@@ -45,6 +45,18 @@ class ServiceDish {
     }
 
     /**
+     * Find dish by ID.
+     */
+    async findDishById(id ="") {
+        try {
+            return await modelDish.findById(id).exec();
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
      * Admin thực hien tạo mới dish
      * @param {*} infor 
      * @param {*} files 
