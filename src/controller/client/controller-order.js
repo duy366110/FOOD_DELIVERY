@@ -5,6 +5,17 @@ class ControllerOrder {
 
     constructor() { }
 
+    async getOrderForUserById(req, res, next) {
+        let { id } = req.params;
+
+        return res.status(200).json({
+            status: true,
+            message: "Get orders success",
+            metadata: {
+                order: await serviceOrder.getUserOrder(id)
+            }
+        })
+    }
 
     /**
      * Client add dish to order
@@ -19,9 +30,9 @@ class ControllerOrder {
         let { status, message } = await serviceOrder.clientOrderDish({user, dish});
         
         if(status) {
-            return res.status(200).json({status: true, message: "User order success"});
+            return res.status(200).json({status: true, message});
         } else {
-            return res.status(200).json({status: false, message: "User order unsuccess"});
+            return res.status(400).json({status: false, message});
         }
     }
 }
