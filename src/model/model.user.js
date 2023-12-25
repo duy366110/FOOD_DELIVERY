@@ -29,6 +29,10 @@ const modelUser = new Schema({
         ref: configDb.role,
         required: true
     },
+    order: {
+        type: Schema.Types.ObjectId,
+        ref: configDb.order
+    }
 }, {
     collection: configDb.user,
     timestamps: true

@@ -18,17 +18,11 @@ class ControllerOrder {
     }
 
     /**
-     * Client add dish to order
-     * @param {*} req 
-     * @param {*} res 
-     * @param {*} next 
-     * @returns 
+     * Client add dish to order.
      */
     async clientOrderDish(req, res, next) {
         let { user, dish } = req.body;
-
         let { status, message } = await serviceOrder.clientOrderDish({user, dish});
-        
         if(status) {
             return res.status(200).json({status: true, message});
         } else {
@@ -40,8 +34,8 @@ class ControllerOrder {
      * 
      */
     async clientCancelOrder(req, res, next) {
-        let { order } = req.body;
-        let { status, message } = await serviceOrder.clientCancelOrder({order});
+        let { user, order } = req.body;
+        let { status, message } = await serviceOrder.clientCancelOrder({user, order});
 
         if(status) {
             return res.status(200).json({status: true, message});
