@@ -35,6 +35,20 @@ class ControllerOrder {
             return res.status(400).json({status: false, message});
         }
     }
+
+    /**
+     * 
+     */
+    async clientCancelOrder(req, res, next) {
+        let { order } = req.body;
+        let { status, message } = await serviceOrder.clientCancelOrder({order});
+
+        if(status) {
+            return res.status(200).json({status: true, message});
+        } else {
+            return res.status(400).json({status: false, message});
+        }
+    }
 }
 
 export default new ControllerOrder();
