@@ -6,7 +6,8 @@ const configDB = {
     dish: 'dishs',
     role: 'roles',
     user: "users",
-    order: "orders"
+    order: "orders",
+    transaction: "transactions"
 }
 
 export default configDB;
