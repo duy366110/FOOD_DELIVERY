@@ -3,7 +3,6 @@ import { ObjectId } from "mongodb";
 import modelOrder from "../model/model-order.js";
 import serviceDish from "./service-dish.js";
 import serviceAccess from "./service-access.js";
-import serviceUser from "./service-user.js";
 
 class ServiceOrder {
 
@@ -29,6 +28,38 @@ class ServiceOrder {
                 }
             ])
             .exec();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Find order information with order - user - dish
+     * @param {*} user 
+     * @param {*} order 
+     * @returns 
+     */
+    async findUserOrderAllInformation(user = "", order = "") {
+        try {
+            return await modelOrder
+            .findOne({_id: {$eq: order},user: {$eq: user}})
+            .populate([
+                {
+                    model: "users",
+                    path: "user",
+                },
+                {
+                    path: 'orders',
+                    populate: [
+                        {
+                            model: 'dishs',
+                            path: 'dish'
+                        }
+                    ]
+                }
+            ])
+            .exec();
+
         } catch (error) {
             throw error;
         }
