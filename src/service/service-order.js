@@ -1,17 +1,22 @@
 "use strict"
-import { ObjectId } from "mongodb";
 import modelOrder from "../model/model-order.js";
 import serviceDish from "./service-dish.js";
 import serviceAccess from "./service-access.js";
+import serviceUser from "./service-user.js";
 
 class ServiceOrder {
 
     constructor() { }
 
+    /**
+     * Client get information order through ID.
+     * @param {*} user 
+     * @returns 
+     */
     async getUserOrder(user = "") {
         try {
             return await modelOrder
-            .findOne({user: {$eq: user}}, '-password -role')
+            .findOne({user: {$eq: user}})
             .populate([
                 {
                     model: "users",
@@ -27,7 +32,7 @@ class ServiceOrder {
                     ]
                 }
             ])
-            .exec();
+            .lean();
         } catch (error) {
             throw error;
         }
@@ -66,7 +71,7 @@ class ServiceOrder {
     }
 
     /**
-     * Tìm tài thông tin order thông quan user ID.
+     * Find order through user.
      * @param {*} user 
      */
     async findOrderByUserID(user = "") {
@@ -90,72 +95,106 @@ class ServiceOrder {
         }
     }
 
-    async createOrUpdateOrderForUser(order = {}, payload = {}) {
+
+    /**
+     * Create - update order
+     * @param {*} order 
+     * @param {*} payload 
+     * @returns 
+     */
+    async createOrUpdateOrderForUser(user = {}, order = {}, payload = {}) {
         try {
+            let orderInfor = null;
+            // Check order exists
             if(order) {
+                // Check dish exists in order
                 let payloadOrder = payload.orders[0].dish;
                 let status = order.orders.some((elmOrder) => elmOrder.dish._id.toString() === payloadOrder._id.toString());
 
                 if(status) {
+                    // Increment quantity dish in order
                     order.orders = order.orders.map((elmOrder) => {
                         if(elmOrder.dish._id.toString() === payloadOrder._id.toString()) {
                             elmOrder.quantity++;
                         }
                         return elmOrder;
                     })
-
                 } else {
+                    // Add new dish to order
                     order.orders.push(...payload.orders);
                 }
-
                 await order.save();
 
             } else {
-                await modelOrder.create(payload);
+                // Add new dish to order
+                orderInfor = await modelOrder.create(payload);
+                user.order = orderInfor;
+                await user.save();
             }
 
-            return {status: true, message: "Order success"};
+            return orderInfor
 
         } catch (error) {
-            console.log(error);
-            return {status: false, message: "Order unsuccess"};
+            throw error;
         }
     }
 
     /**
      * Client add dish to order.
-     * @param {*} infor 
      */
     async clientOrderDish(infor = {user: "", dish: ""}) {
         try {
             let dish = await serviceDish.findDishById(infor.dish);
-            let access = await serviceAccess.verifyUserAccountWhenOrder({user: infor.user});
+            let user = await serviceUser.findUserById(infor.user);
 
-            let order = await this.findOrderByUserID(access.user._id);
-            let payload = {
-                user: access.user,
-                orders: [
-                    {
-                        dish,
-                        quantity: 1
-                    }
-                ]
-            };
+            if(user) {
+                let order = await this.findOrderByUserID(user._id);
+                let payload = {
+                    user: user,
+                    orders: [
+                        {
+                            dish,
+                            quantity: 1
+                        }
+                    ]
+                };
 
-            return await this.createOrUpdateOrderForUser(order, payload);
-            
+                let orderInfor = await this.createOrUpdateOrderForUser(user, order, payload);
+
+                return {
+                    status: orderInfor? true : false,
+                    message: orderInfor? "Order success" : "Order unsuccess"
+                }
+            }
+            return {status: false, message: "Not found user account"};
+
         } catch (error) {
             // METHOD FAILD
             throw error;
         }
     }
 
-    async clientCancelOrder(infor = {order: ""}) {
+    /**
+     * Client cancel order.
+     * @param {*} infor
+     * @returns 
+     */
+    async clientCancelOrder(infor = {user: "", order: ""}) {
         try {
-            let { deletedCount } = await modelOrder.deleteOne({_id: {$eq: infor.order}});
-            return {
-                status: deletedCount? true : false,
-                message: deletedCount? 'Cancel success' : 'Cancel unsuccess'
+            let order = await this.findUserOrderAllInformation(infor.user, infor.order);
+
+            if(order) {
+                order.user.order = null;
+                await order.user.save();
+                let { deletedCount } = await order.deleteOne();
+
+                return {
+                    status: deletedCount? true : false,
+                    message: deletedCount? 'Cancel success' : 'Cancel unsuccess'
+                }
+
+            } else {
+                return {status: false, message: 'Cancel order unsuccess'};
             }
         } catch (error) {
             throw error;
