@@ -1,4 +1,5 @@
 "use strict"
+import { ObjectId } from "mongodb";
 import modelOrder from "../model/model-order.js";
 import serviceDish from "./service-dish.js";
 import serviceAccess from "./service-access.js";
@@ -114,6 +115,18 @@ class ServiceOrder {
             
         } catch (error) {
             // METHOD FAILD
+            throw error;
+        }
+    }
+
+    async clientCancelOrder(infor = {order: ""}) {
+        try {
+            let { deletedCount } = await modelOrder.deleteOne({_id: {$eq: infor.order}});
+            return {
+                status: deletedCount? true : false,
+                message: deletedCount? 'Cancel success' : 'Cancel unsuccess'
+            }
+        } catch (error) {
             throw error;
         }
     }
