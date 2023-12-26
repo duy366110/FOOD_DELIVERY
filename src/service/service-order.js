@@ -1,8 +1,8 @@
 "use strict"
 import modelOrder from "../model/model-order.js";
 import serviceDish from "./service-dish.js";
-import serviceAccess from "./service-access.js";
 import serviceUser from "./service-user.js";
+import configMessage from "../config/config-message.js";
 
 class ServiceOrder {
 
@@ -163,10 +163,10 @@ class ServiceOrder {
 
                 return {
                     status: orderInfor? true : false,
-                    message: orderInfor? "Order success" : "Order unsuccess"
+                    message: orderInfor? configMessage.success.order['001'] : configMessage.error.order['001']
                 }
             }
-            return {status: false, message: "Not found user account"};
+            return {status: false, message: configMessage.error.user['001']};
 
         } catch (error) {
             // METHOD FAILD
@@ -190,11 +190,11 @@ class ServiceOrder {
 
                 return {
                     status: deletedCount? true : false,
-                    message: deletedCount? 'Cancel success' : 'Cancel unsuccess'
+                    message: deletedCount? configMessage.success.order["002"] : configMessage.error.order["002"]
                 }
 
             } else {
-                return {status: false, message: 'Cancel order unsuccess'};
+                return {status: false, message: configMessage.error.order["002"]};
             }
         } catch (error) {
             throw error;

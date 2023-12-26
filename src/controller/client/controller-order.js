@@ -1,16 +1,24 @@
 "use strict"
 import serviceOrder from "../../service/service-order.js";
+import configMessage from "../../config/config-message.js";
 
 class ControllerOrder {
 
     constructor() { }
 
+    /**
+     * Client get order by ID.
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     * @returns 
+     */
     async getOrderForUserById(req, res, next) {
         let { id } = req.params;
 
         return res.status(200).json({
             status: true,
-            message: "Get orders success",
+            message: configMessage.success.order["003"],
             metadata: {
                 order: await serviceOrder.getUserOrder(id)
             }
@@ -31,7 +39,7 @@ class ControllerOrder {
     }
 
     /**
-     * 
+     * Client cancel order
      */
     async clientCancelOrder(req, res, next) {
         let { user, order } = req.body;
