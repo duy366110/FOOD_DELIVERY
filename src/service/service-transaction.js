@@ -49,6 +49,10 @@ class ServiceTransaction {
                     user: order.user,
                     orders: order.orders
                 });
+                order.user.order = null;
+                order.user.transactions.push(transaction);
+
+                await order.user.save();
                 await order.deleteOne();
                 return transaction;
             }

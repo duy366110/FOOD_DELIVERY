@@ -32,7 +32,13 @@ const modelUser = new Schema({
     order: {
         type: Schema.Types.ObjectId,
         ref: configDb.order
-    }
+    },
+    transactions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: configDb.transaction
+        }
+    ]
 }, {
     collection: configDb.user,
     timestamps: true
