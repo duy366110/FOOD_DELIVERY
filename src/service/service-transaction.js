@@ -6,7 +6,12 @@ class ServiceTransaction {
 
     constructor() {}
 
-    async findAllUserTransaction(user = "") {
+    /**
+     * Client get information transaction through ID.
+     * @param {*} user
+     * @returns 
+     */
+    async getAllUserTransaction(user = "") {
         try {
             return await modelTransaction
             .find({user: {$eq: user}})
