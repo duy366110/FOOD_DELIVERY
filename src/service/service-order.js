@@ -124,6 +124,7 @@ class ServiceOrder {
                     order.orders.push(...payload.orders);
                 }
                 await order.save();
+                orderInfor = order;
 
             } else {
                 // Add new dish to order
