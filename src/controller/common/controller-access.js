@@ -10,7 +10,12 @@ class ControllerAccess {
     async signin(req, res, next) {
         let { email, password } = req.body;
         await serviceAccess.verifySigninUserAccount({email, password}, 'Client', (information) => {
-            return res.status(200).json(information);
+            let { status } = information;
+            if(status){
+                return res.status(200).json(information);
+            } else {
+                return res.status(400).json(information);
+            }
         });
     }
 
