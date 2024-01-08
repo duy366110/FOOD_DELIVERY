@@ -49,7 +49,7 @@ class ServiceCategory {
      */
     async getAllCategoryWithDish() {
         try {
-            return await modelCategory.find({}).populate(['dishs']).lean();
+            return await modelCategory.find({}).lean();
         } catch (error) {
             throw error;
         }
