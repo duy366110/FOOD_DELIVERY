@@ -44,6 +44,27 @@ class ServiceDish {
         }
     }
 
+
+    /**
+     * Client get dish by category id load lazy.
+     * @param {*} category 
+     * @returns 
+     */
+    async getDishByCategoryId(category = "") {
+        try {
+
+            return await modelDish.find({
+                category: {
+                    $eq: category
+                }
+            })
+
+        } catch (error) {
+            // THỰC HIỆN PHƯƠNG THỨC LỖI
+            throw error;
+        }
+    }
+
     /**
      * Find dish by ID.
      */

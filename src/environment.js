@@ -3,7 +3,7 @@ const environment = {
     origin: {
         dev: [
             "http://localhost:4200",
-            "http://localhost:3000"
+            "http://localhost:3000",
         ],
         pro: [
             "https://food-3f27f.web.app",
