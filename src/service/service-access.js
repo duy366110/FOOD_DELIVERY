@@ -120,15 +120,25 @@ class ServiceAccess {
      * Client register account
      */
     async signupUserAccount(infor = {fullName: "", email: "", password: "", phone: "", address: ""}, cb) {
-        let role = await serviceRole.findRoleByName('Client');
-        let {status, user} = await serviceUser.createUserAccount(infor, role._id.toString());
+        let checkUser = await serviceUser.findUserByEmail(infor.email);
 
-        if(status) {
-            cb(await this.verifyUserAccount(user));
+        if(!checkUser) {
+            let role = await serviceRole.findRoleByName('Client');
+            let {status, user} = await serviceUser.createUserAccount(infor, role._id.toString());
+
+            if(status) {
+                cb(await this.verifyUserAccount(user));
+            } else {
+                cb({
+                    status: false,
+                    message: configMessage.success.access['001'],
+                    metadata: {}
+                })
+            }
         } else {
             cb({
                 status: false,
-                message: configMessage.success.access['001'],
+                message: configMessage.error.access['005'],
                 metadata: {}
             })
         }
@@ -138,7 +148,7 @@ class ServiceAccess {
     /**
      * Verify user account signout
      */
-    async verifySignoutUserAccount(infor = {email: "", accessToken: "", refreshToken: ""}, cb) {
+    async verifySignoutUserAccount(infor = {id: "", email: "", accessToken: "", refreshToken: ""}, cb) {
         let access = await this.findAccessByUserId(infor.id);
 
         jwt.verify(infor.accessToken, access.publicKey, async (information) => {
