@@ -66,7 +66,7 @@ class ServiceUser {
     /**
      * Client - admin tìm thông tin người dùng thông qua e-mail
      */
-    async findUserByEmail(email, cb) {
+    async findUserByEmail(email) {
         try {
             return await modelUser.findOne({email: {$eq: email}}).populate(['role']).exec();
         } catch (error) {
